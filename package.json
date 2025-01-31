@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && cp manifest.json dist/",
+    "build": "tsc && vite build && cp manifest.json dist/ && cp content.js dist/",
     "preview": "vite preview"
   },
   "keywords": [],
