@@ -13,6 +13,25 @@ const state = {
   ime: false,
 };
 
+const imeEvents = ["compositionstart", "compositionend"];
+
+const listenImeEvents = () => {
+  imeEvents.forEach((imeEvent) => {
+    document.addEventListener(
+      imeEvent,
+      (event) => {
+        if (imeEvent === "compositionstart") {
+          state.ime = true;
+        }
+        if (imeEvent === "compositionend") {
+          state.ime = false;
+        }
+      },
+      true,
+    );
+  });
+};
+
 const changeAllEnterBehavior = () => {
   keyEvents.forEach((keyEvent) => {
     document.addEventListener(
@@ -26,80 +45,71 @@ const changeAllEnterBehavior = () => {
             target: event.target,
             tagName: event.target.tagName,
           });
-        } else {
-          event.preventDefault();
-          event.stopPropagation();
-          console.log("EnterをEnter+Shiftに変更しました");
-          // イベントの種類に応じて適切なイベントシーケンスを発火
-          if (keyEvent === "keydown") {
-            // keydownの場合：Shift押下 → Enter押下
-            const events = [
-              new KeyboardEvent("keydown", {
-                key: "Shift",
-                code: "ShiftLeft",
-                keyCode: 16,
-                which: 16,
-                shiftKey: true,
-              }),
-              new KeyboardEvent("keydown", {
-                key: "Enter",
-                code: "Enter",
-                keyCode: 13,
-                which: 13,
-                shiftKey: true,
-              }),
-              new KeyboardEvent("keypress", {
-                key: "Enter",
-                code: "Enter",
-                keyCode: 13,
-                which: 13,
-                shiftKey: true,
-              }),
-            ];
-            events.forEach((e) => event.target.dispatchEvent(e));
-            if (!state.ime) {
-              insertNewLine(event);
-            }
-          } else if (keyEvent === "keypress") {
-            // keypressの場合：Enterのkeypressのみ
-            const keypressEvent = new KeyboardEvent("keypress", {
+          return;
+        }
+
+        event.preventDefault();
+        event.stopPropagation();
+        console.log("EnterをEnter+Shiftに変更しました");
+        // イベントの種類に応じて適切なイベントシーケンスを発火
+        if (keyEvent === "keydown") {
+          // keydownの場合：Shift押下 → Enter押下
+          const events = [
+            new KeyboardEvent("keydown", {
+              key: "Shift",
+              code: "ShiftLeft",
+              keyCode: 16,
+              which: 16,
+              shiftKey: true,
+            }),
+            new KeyboardEvent("keydown", {
               key: "Enter",
               code: "Enter",
               keyCode: 13,
               which: 13,
               shiftKey: true,
-            });
-            event.target.dispatchEvent(keypressEvent);
-          } else if (keyEvent === "keyup") {
-            // keyupの場合：Enter解放 → Shift解放
-            const events = [
-              new KeyboardEvent("keyup", {
-                key: "Enter",
-                code: "Enter",
-                keyCode: 13,
-                which: 13,
-                shiftKey: true,
-              }),
-              new KeyboardEvent("keyup", {
-                key: "Shift",
-                code: "ShiftLeft",
-                keyCode: 16,
-                which: 16,
-                shiftKey: false,
-              }),
-            ];
-            events.forEach((e) => event.target.dispatchEvent(e));
+            }),
+            new KeyboardEvent("keypress", {
+              key: "Enter",
+              code: "Enter",
+              keyCode: 13,
+              which: 13,
+              shiftKey: true,
+            }),
+          ];
+          events.forEach((e) => event.target.dispatchEvent(e));
+          if (!state.ime) {
+            insertNewLine(event);
           }
-        }
-
-        if (event.type === "compositionstart") {
-          console.log("IME入力中");
-          state.ime = true;
-        }
-
-        if (event.type === "compositionend") {
-          console.log("IME入力終了");
-          state.ime = false;
+        } else if (keyEvent === "keypress") {
+          // keypressの場合：Enterのkeypressのみ
+          const keypressEvent = new KeyboardEvent("keypress", {
+            key: "Enter",
+            code: "Enter",
+            keyCode: 13,
+            which: 13,
+            shiftKey: true,
+          });
+          event.target.dispatchEvent(keypressEvent);
+        } else if (keyEvent === "keyup") {
+          // keyupの場合：Enter解放 → Shift解放
+          const events = [
+            new KeyboardEvent("keyup", {
+              key: "Enter",
+              code: "Enter",
+              keyCode: 13,
+              which: 13,
+              shiftKey: true,
+            }),
+            new KeyboardEvent("keyup", {
+              key: "Shift",
+              code: "ShiftLeft",
+              keyCode: 16,
+              which: 16,
+              shiftKey: false,
+            }),
+          ];
+          events.forEach((e) => event.target.dispatchEvent(e));
         }
       },
       true,
@@ -107,4 +117,5 @@ const changeAllEnterBehavior = () => {
   });
 };
 
+listenImeEvents();
 changeAllEnterBehavior();
