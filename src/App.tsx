@@ -6,7 +6,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Chrome Extension12</h1>
+      <h1>Chrome Extension1</h1>
       <button onClick={() => setCount(count + 1)}>Count: {count}</button>
     </div>
   );
