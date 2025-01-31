@@ -1,7 +1,7 @@
 const keyEvents = ["keydown", "keypress", "keyup"];
 
-const insertNewLine = (event) => {
-  const textarea = event.target;
+const insertNewLine = (event: KeyboardEvent) => {
+  const textarea = event.target as HTMLTextAreaElement;
   const start = textarea.selectionStart;
   const end = textarea.selectionEnd;
   const value = textarea.value;
@@ -19,7 +19,7 @@ const listenImeEvents = () => {
   imeEvents.forEach((imeEvent) => {
     document.addEventListener(
       imeEvent,
-      (event) => {
+      () => {
         if (imeEvent === "compositionstart") {
           state.ime = true;
         }
@@ -36,14 +36,17 @@ const changeAllEnterBehavior = () => {
   keyEvents.forEach((keyEvent) => {
     document.addEventListener(
       keyEvent,
-      (event) => {
-        if (event.key !== "Enter" || event.shiftKey || event.target.tagName !== "TEXTAREA") {
+      (e) => {
+        const event = e as KeyboardEvent;
+        const target = event.target as HTMLElement | null;
+        const tagName = target?.tagName ?? "";
+        if (event.key !== "Enter" || event.shiftKey || tagName !== "TEXTAREA") {
           console.log("Detected key event:", {
             type: event.type,
             key: event.key,
             shiftKey: event.shiftKey,
             target: event.target,
-            tagName: event.target.tagName,
+            tagName: tagName,
           });
           return;
         }
@@ -77,7 +80,7 @@ const changeAllEnterBehavior = () => {
               shiftKey: true,
             }),
           ];
-          events.forEach((e) => event.target.dispatchEvent(e));
+          events.forEach((e) => target?.dispatchEvent(e));
           if (!state.ime) {
             insertNewLine(event);
           }
@@ -90,7 +93,7 @@ const changeAllEnterBehavior = () => {
             which: 13,
             shiftKey: true,
           });
-          event.target.dispatchEvent(keypressEvent);
+          target?.dispatchEvent(keypressEvent);
         } else if (keyEvent === "keyup") {
           // keyupの場合：Enter解放 → Shift解放
           const events = [
@@ -109,7 +112,7 @@ const changeAllEnterBehavior = () => {
               shiftKey: false,
             }),
           ];
-          events.forEach((e) => event.target.dispatchEvent(e));
+          events.forEach((e) => target?.dispatchEvent(e));
         }
       },
       true,

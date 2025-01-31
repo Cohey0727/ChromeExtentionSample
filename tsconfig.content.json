@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2023",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "outDir": "./dist",
+    "noEmit": false,
+    "strict": true,
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "resolveJsonModule": true
+  },
+  "files": ["content.ts"],
+  "exclude": ["dist", "node_modules"]
+}
