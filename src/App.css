@@ -1,5 +1,5 @@
 .container {
-  min-width: 300px;
+  min-width: 400px;
   padding: 1rem;
   background-color: #f9fafb;
 }
@@ -67,6 +67,7 @@ kbd {
 .description {
   color: #6b7280;
   margin-left: 0.5rem;
+  white-space: nowrap;
 }
 
 .version {
