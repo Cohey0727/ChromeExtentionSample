@@ -1,8 +1,8 @@
 {
-  "name": "chrome-ex",
+  "name": "chat-llm-enter-modifier",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "src/main.ts",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build && cp manifest.json dist/ && cp -R icons dist/ && tsc -p tsconfig.content.json",
