@@ -128,9 +128,38 @@ const changeSimpleEnterBehavior = (keyEvent: KeyEvent, event: KeyboardEvent) => 
   }
 };
 
+const searchButton = (
+  element: HTMLElement | null,
+  selector: string,
+  depth: number = 0,
+): HTMLButtonElement | null => {
+  // 要素がnullまたは探索深さが一定以上の場合は終了
+  if (!element || depth > 5) return null;
+
+  // 兄弟要素を探索
+  let sibling = element.nextElementSibling;
+  while (sibling) {
+    // 兄弟要素内から条件に合致する要素を探索し、その親のbuttonを取得
+    const found = sibling.querySelector(selector)?.closest("button");
+    if (found instanceof HTMLButtonElement) {
+      return found;
+    }
+    sibling = sibling.nextElementSibling;
+  }
+
+  // 親要素が存在する場合、親要素から再探索
+  const parent = element.parentElement;
+  if (parent) {
+    return searchButton(parent, selector, depth + 1);
+  }
+
+  return null;
+};
+
 const changeCmdEnterBehavior = (keyEvent: KeyEvent, event: KeyboardEvent) => {
   const target = event.target as HTMLElement | null;
   if (keyEvent === "keydown") {
+    const button = searchButton(target, ".svg-inline--fa.fa-paper-plane");
     const events = [
       new KeyboardEvent("keydown", {
         key: "Enter",
@@ -155,6 +184,7 @@ const changeCmdEnterBehavior = (keyEvent: KeyEvent, event: KeyboardEvent) => {
       }),
     ];
     events.forEach((e) => target?.dispatchEvent(e));
+    button?.click();
   }
 };
 
