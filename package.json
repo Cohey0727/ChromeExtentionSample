@@ -5,7 +5,7 @@
   "main": "src/main.ts",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && cp manifest.json dist/ && cp -R icons dist/ && tsc -p tsconfig.content.json",
+    "build": "tsc && vite build && cp manifest.json dist/ && cp -R icons dist/ && tsc -p tsconfig.content.json && zip -r dist.zip dist",
     "preview": "vite preview"
   },
   "keywords": [],
